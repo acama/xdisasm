@@ -106,12 +106,12 @@ int disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bi
             else disas = print_insn_little_arm; 
             break;
 
-        case ARCH_mips:
+        case ARCH_mips: // TODO: add mips64 support
             if(endian) disas = print_insn_big_mips;
             else disas = print_insn_little_mips; 
             break;
 
-        case ARCH_powerpc:
+        case ARCH_powerpc: // TODO: add powerpc64 support
             if(endian) disas = print_insn_big_powerpc;
             else disas = print_insn_little_powerpc;
             dis->arch = bfd_arch_powerpc;       // ppc cares about this

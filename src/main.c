@@ -40,7 +40,7 @@ void print_usage(){
     printf("\t -b (16 | 32 | 64) sets the processor mode\n");
     printf("\t -m (arm | mips | powerpc | x86) sets the architecture\n");
     printf("\t -v displays the version number\n");
-    printf("\t -l big endian\n");
+    printf("\t -l[b|e] big or little endian\n");
     printf("\t -e skips <bytes> of header\n");
     printf("\t -a rellocate at given address\n");
     printf("\t -h prints this menu\n");
@@ -60,8 +60,9 @@ int main(int argc, char **argv){
     size_t datalen = 0;
     size_t hdrlen = 0;
     unsigned int vma = 0;
+    char endianchar = 0;
 
-    while((opt = getopt(argc, argv, "b:m:e:a:vhl")) != -1){
+    while((opt = getopt(argc, argv, "b:m:e:a:vhl:")) != -1){
         switch(opt){
             case 'b':
                 fb = 1;
@@ -81,6 +82,7 @@ int main(int argc, char **argv){
                 break;
             case 'l':
                 fl = 1;
+                endianchar = optarg[0];
                 break;
             case 'a':
                 aval = optarg;
@@ -121,7 +123,9 @@ int main(int argc, char **argv){
     }
 
     if(fl){
-        endian = 1;
+        if(endianchar == 'b') endian = 1;
+        else if(endianchar == 'e') endian = 0;
+        else print_usage();
     }
 
     if(mval){
