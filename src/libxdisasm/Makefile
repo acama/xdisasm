@@ -12,3 +12,4 @@ lib$(NAME).so: $(NAME).o
  
 clean:
 	$(RM) *.o *.so*
+	$(RM) ../../build/lib/*.so

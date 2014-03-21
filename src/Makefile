@@ -1,5 +1,5 @@
 CC=gcc
-APP=xdisasmbin
+APP=../build/xdisasmbin
 CFLAGS= -Wall -L../build/lib/ -lxdisasm -ggdb
 
 default: all
@@ -10,7 +10,7 @@ makelib:
 	cd libxdisasm && $(MAKE)
 
 xdisasm: main.o
-	$(CC) $(CFLAGS) -o ../build/${APP} main.o
+	$(CC) $(CFLAGS) -o ${APP} main.o
 
 clean:
 	rm -rf *.o ${APP}

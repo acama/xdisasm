@@ -1,8 +1,7 @@
-default: xdisasm
+default: xdis
 
-xdisasm:
+xdis:
 	cd src && $(MAKE)
 
 clean:
-	rm -rf *.o ${APP}
-	cd libxdisasm && $(MAKE) clean
+	cd  src && $(MAKE) clean
