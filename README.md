@@ -5,13 +5,13 @@ xdisasm is a simple binary file disassembler based on libopcodes and bfd from bi
 
 Build Instructions:
 -------------------
-1. First Build binutils with the appropriate flags. You can get the source from http://ftp.gnu.org/gnu/binutils/. By default binutils will install the shared libraries in /usr/local/lib. If this is not in your library path you might run into some issues. Run the following commands in the directory where you extracted the binutils archive:
+First Build binutils with the appropriate flags. You can get the source from http://ftp.gnu.org/gnu/binutils/. By default binutils will install the shared libraries in /usr/local/lib. If this is not in your library path you might run into some issues. Run the following commands in the directory where you extracted the binutils archive:
 ```
 ./configure --enable-targets=al --enable-shared
 make
 sudo make install
 ```
-2. Then you can build xdisasm. From the top level directory, run the following command:
+Then you can build xdisasm. From the top level directory, run the following command:
 ```
 make
 ```
