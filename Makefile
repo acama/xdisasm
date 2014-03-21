@@ -1,16 +1,7 @@
-CC=gcc
-APP=xdisasmbin
-CFLAGS= -Wall -L./build/lib/ -lxdisasm -ggdb
+default: xdisasm
 
-default: all
-
-all: makelib xdisasm
-
-makelib:
-	cd libxdisasm && $(MAKE)
-
-xdisasm: main.o
-	$(CC) $(CFLAGS) -o build/${APP} main.o
+xdisasm:
+	cd src && $(MAKE)
 
 clean:
 	rm -rf *.o ${APP}
