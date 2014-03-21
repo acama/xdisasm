@@ -4,9 +4,6 @@ DEFAULT REL
     section .text
     global _start
 
-hello:
-    db "Hello World",0xa
-
 _start:
     lea rsi, [hello]
     mov rax, 1
@@ -15,3 +12,6 @@ _start:
     syscall
     mov rax, 60
     syscall
+
+hello:
+    db "Hello World",0xa
