@@ -8,7 +8,7 @@ VERSION := $(MAJOR).$(MINOR)
 lib: lib$(NAME).so
  
 lib$(NAME).so: $(NAME).o
-	$(CC) -shared -Wl,-soname,lib$(NAME).so $^ -o $@ -lbfd -lopcodes
+	$(CC) -shared -Wl,-soname,lib$(NAME).so $^ -o ../build/lib/$@ -lbfd -lopcodes
  
 clean:
 	$(RM) *.o *.so*

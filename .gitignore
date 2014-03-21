@@ -3,7 +3,5 @@
 *.o
 
 # Build
-xdisasm
+build
 
-# misc
-notes
