@@ -1,0 +1,3 @@
+When building
+    usr/local/lib not in library path so either make file in etc/ld.so.conf.d/
+    or compile with -Wl,-rpath=/usr/local/lib

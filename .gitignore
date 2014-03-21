@@ -1,0 +1,7 @@
+# C
+*.so
+*.o
+
+# Build
+xdisasm
+
