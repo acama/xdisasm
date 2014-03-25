@@ -28,7 +28,7 @@
 #include <string.h>
 #include <limits.h>
 #include "libxdisasm/xdisasm.h"
-
+//#include "libxdisasm/linkedlist.h"
 
 void print_version(){
     printf("%s %s\n", PACKAGE, PACKAGE_VERSION);
@@ -51,6 +51,7 @@ int main(int argc, char **argv){
     FILE * fp = NULL;
     int opt, endian = 0;
     int fb = 0, fv = 0, fh = 0, bits = 0, arch = 0, fl = 0;
+    insn_list * ilist = NULL;
     char * bval = NULL;
     char * mval = NULL;
     char * eval = NULL;
@@ -183,7 +184,8 @@ int main(int argc, char **argv){
         exit(-1);
     }
 
-    disassemble(vma, data, datalen, arch, bits, endian);
+    ilist = (insn_list *) disassemble(vma, data, datalen, arch, bits, endian);
+    print_all_instrs(&ilist);
     free(data); 
     return 0;
 }

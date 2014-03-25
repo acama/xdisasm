@@ -28,47 +28,132 @@
 #include <string.h>
 #include "xdisasm.h"
 
-#define MAX_INS_STRSIZE 2048 // Output would be truncated if libopcodes gave
-                             // an instruction longer than 2048. But this
-                             // is not very likely
+#define MAX_INS_STRSIZE 2048
 
 char curr_insn_str[MAX_INS_STRSIZE] = {0};
 char * currptr = curr_insn_str;
 
-void print_as_hex(char * buf, unsigned int siz, int endian){
-    int i = 0;
-    char * tmpbuf = NULL;
-    char * tmptr = NULL;
+// insn_t * -> void
+// Print instruction in a formatted way
+void print_instr(insn_t * ins){
+    size_t i, l;
+    char * tmpbuf = NULL, * ptr;
 
-    tmpbuf = malloc(siz);
-  
+    if(ins == NULL){
+        return;
+    }
+
+    printf("%08X  ", ins->vma);
+    l = ins->instr_size;
+   
+    tmpbuf = (char *) malloc((l * 2) + 1);
+
     if(!tmpbuf){
         perror("malloc");
-        exit(-1);
-    }
-    
-    memset(tmpbuf, 0, siz);
-    tmptr = tmpbuf;
-
-    if(endian){
-        for(; i < siz; i++){
-            tmptr += sprintf(tmptr, "%02X", ((unsigned char *)buf)[i]);
-        }
-    }else{
-         for(i = siz - 1; i >= 0; i--){
-            tmptr += sprintf(tmptr, "%02X", ((unsigned char *)buf)[i]);
-        }
+        return;
     }
 
-    if(siz >= 15) printf("%-40s", tmpbuf);
-    else printf("%-20s", tmpbuf);
+    ptr = tmpbuf;
+    for(i = 0; i < l; i++){
+        sprintf(ptr, "%02X", (unsigned char)(ins->opcodes[i]));
+        ptr += 2;
+    }
+
+    if(l < 15)
+        printf("%-18s", tmpbuf);
+    else
+        printf("%-36s", tmpbuf);
+    printf("%s\n", ins->decoded_instrs);
     free(tmpbuf);
 }
 
+// insn_list ** -> void
+// Print all the instructions in a formatted way
+void print_all_instrs(insn_list **ilist){
+    insn_list * l = *ilist;
+
+    while(l != NULL){
+        print_instr(l->instr);
+        l = l->next;
+    }
+}
+
+// insn_list ** -> size_t
+// Count the number of instructions in the list
+size_t instr_num(insn_list **ilist){
+    insn_list * l = *ilist;
+    size_t len = 0;
+
+    while(l != NULL){
+        len++;
+        l = l->next;
+    }
+
+    return len;
+}
+
+// insn_t *, insn_list ** -> void
+// Initialize list
+void init_list(insn_t *i, insn_list **ilist){
+    insn_list * l = (insn_list *) malloc(sizeof(insn_list));
+    l->instr = i;
+    l->next = NULL;
+    *ilist = l;
+}
+
+// insn_t *, insn_list ** -> void
+// Append instruction to list
+void append_instr(insn_t * i, insn_list **ilist){
+    insn_list * tmp = NULL;
+    insn_list * c = *ilist; 
+
+    if(c == NULL){
+        init_list(i, ilist);
+        return;
+    }
+
+    if(c != NULL){
+        while(c->next != NULL){
+            c = c->next;
+        }
+    }
+
+    tmp = (insn_list *) malloc(sizeof(insn_list));
+    tmp->instr = i;
+    tmp->next = NULL;
+
+    c->next = tmp; 
+}
+
+// char *, char *, unsigned int -> void
+// Copy the bytes from src to dest
+void copy_bytes_x86(char * dest, char * src, unsigned int siz){
+    int i = 0;
+
+    for(; i < siz; i++){
+        dest[i] = src[i];
+    }
+
+}
+
+// char *, char *, unsigned int -> void
+// Copy the bytes from src to dest, inverted way
+void copy_bytes(char * dest, char * src, unsigned int siz){
+    int i = 0, j = 0;
+
+    for(i = siz - 1; i >= 0; i--, j++){
+        dest[j] = src[i];
+    }
+}
+
+// bfd_vma, struct disassemble_info * -> void
+// Formatter for address in memory referencing instructions
 void override_print_address(bfd_vma addr, struct disassemble_info *info){
     sprintf(currptr, "0x%x", (unsigned int) addr);
 }
 
+// void*, char * -> int
+// Callback function for instruction printing function
 int my_fprintf(void* stream, const char * format, ...){
     va_list arg;
 
@@ -78,12 +163,13 @@ int my_fprintf(void* stream, const char * format, ...){
     return 0;
 }
 
-/* Disassemble the bytes pointed to by buf */
-int disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bits, int endian){
+// uint, char*, size_t, int, int -> insn_list *
+// Disassemble the raw buf for the given parameters
+void * disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bits, int endian){
+    insn_list * ilist = NULL;
     bfd_byte* buf = NULL;
     disassemble_info* dis = NULL;
     unsigned int count = 0;
-    int endian_print;
     size_t pos = 0, length = 0, max_pos = 0;
     disassembler_ftype disas; 
 
@@ -127,25 +213,51 @@ int disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bi
 
         default:
             fprintf(stderr, "libxdisasm: Invalid architecture\n");
-            return -1;
+            return NULL;
     } 
    
-    // because of how printing function works, need to do this
-    if(arch == ARCH_x86) endian_print = 1;
-    else endian_print = endian;
-
     while(pos < max_pos)
       {
-        printf("%08X  ", (unsigned int) pos);
-        unsigned int size = disas((bfd_vma) pos, dis);
-        print_as_hex(rawbuf + (pos - vma), size, endian_print);
-        printf(" %s", curr_insn_str);
-        memset(curr_insn_str, 0, sizeof(curr_insn_str));
-        currptr = curr_insn_str;
-        pos += size;
-        count++;
-        fprintf(stdout, "\n");
+          insn_t * curri = (insn_t *) malloc(sizeof(insn_t));
+          if(!curri){
+              perror("malloc");
+              return NULL;
+          }
+
+          curri->vma = pos;
+          unsigned int size = disas((bfd_vma) pos, dis);
+          curri->instr_size = size;
+
+          char * opcodes = (char *) malloc(size);
+          if(!opcodes){
+              perror("malloc");
+              return NULL;
+          }
+        
+          if(arch == ARCH_x86){
+              copy_bytes_x86(opcodes, rawbuf + (pos - vma), size);
+          }else{
+              copy_bytes(opcodes, rawbuf + (pos - vma), size);
+          }
+          curri->opcodes = opcodes;
+
+          size_t istrlen = strlen(curr_insn_str);
+          char * decoded_instrs = (char *) malloc(istrlen + 1);
+          if(!decoded_instrs){
+              perror("malloc");
+              return NULL;
+          }
+          memcpy(decoded_instrs, curr_insn_str, istrlen + 1);
+          curri->decoded_instrs = decoded_instrs;
+
+
+          memset(curr_insn_str, 0, sizeof(curr_insn_str));
+          currptr = curr_insn_str;
+          pos += size;
+          count++;
+          append_instr(curri, &ilist);
       }
+
     free(dis);
-    return 0;
+    return ilist;
 }

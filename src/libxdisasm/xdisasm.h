@@ -26,6 +26,38 @@
 #define ARCH_powerpc 3
 #define ARCH_x86 4
 
-int disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bits, int endian);
+// instruction structure
+typedef struct insn_t{
+    unsigned int vma;
+    size_t instr_size;
+    char * opcodes;
+    char * decoded_instrs;
+}insn_t;
+
+// list container for instruction
+typedef struct insn_list{
+    insn_t * instr;
+    struct insn_list * next;
+}insn_list;
+
+// insn_t *, insn_list ** -> void
+// Append instruction to list
+void append_instr(insn_t * i, insn_list **ilist);
+
+// char *, char *, unsigned int -> void
+// Copy the bytes from src to dest, inverted way
+void * disassemble(unsigned int vma, char * rawbuf, size_t buflen, int arch, int bits, int endian);
+
+// insn_list ** -> size_t
+// Count the number of instructions in the list
+size_t instr_num(insn_list **ilist);
+
+// insn_t * -> void
+// Print instruction in a formatted way
+void print_instr(insn_t * ins);
+
+// insn_list ** -> void
+// Print all the instructions in a formatted way
+void print_all_instrs(insn_list **ilist);
 
 #endif
