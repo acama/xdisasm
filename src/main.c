@@ -186,9 +186,17 @@ int main(int argc, char **argv){
         exit(-1);
     }
 
-    ilist = (insn_list *) disassemble(vma, data, datalen, arch, bits, endian);
+    ilist = disassemble(vma, data, datalen, arch, bits, endian);
     if(!ilist) return -1;
     print_all_instrs(&ilist);
+
+    /*
+    insn_t * i = disassemble_one(vma, data, datalen, arch, bits, endian);
+    print_instr(i);
+    free_instr(i);
+    */
+
+    free_all_instrs(&ilist);
     free(data); 
     return 0;
 }
