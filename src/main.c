@@ -19,19 +19,21 @@
  */
 
 
-#include "libxdisasm/package.h"
-#include <bfd.h>
-#include <dis-asm.h>
+//#include "libxdisasm/package.h"
+//#include <bfd.h>
+//#include <dis-asm.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
-#include "libxdisasm/xdisasm.h"
-//#include "libxdisasm/linkedlist.h"
+#include "libxdisasm/include/xdisasm.h"
+
+#define VERSION "1.0"
 
 void print_version(){
-    printf("%s %s\n", PACKAGE, PACKAGE_VERSION);
+    printf("%s \n", VERSION);
     exit(0);
 }
 
