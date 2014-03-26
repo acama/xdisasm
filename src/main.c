@@ -187,6 +187,7 @@ int main(int argc, char **argv){
     }
 
     ilist = (insn_list *) disassemble(vma, data, datalen, arch, bits, endian);
+    if(!ilist) return -1;
     print_all_instrs(&ilist);
     free(data); 
     return 0;
