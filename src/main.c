@@ -38,11 +38,11 @@ void print_version(){
 }
 
 void print_usage(){
-    printf("Usage: xdisasm -m arch [-b bits] [-e bytes] [-v] [-h] inputfile\n");
+    printf("Usage: xdisasm -m arch [-b bits] [-e bytes] [-l endian] [-a relocaddr] [-v] [-h] inputfile\n");
     printf("\t -b (16 | 32 | 64) sets the processor mode\n");
     printf("\t -m (arm | mips | powerpc | x86) sets the architecture\n");
     printf("\t -v displays the version number\n");
-    printf("\t -l[b|e] big or little endian\n");
+    printf("\t -l (b | e) big or little endian\n");
     printf("\t -e skips <bytes> of header\n");
     printf("\t -a rellocate at given address\n");
     printf("\t -h prints this menu\n");
