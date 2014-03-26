@@ -1,7 +1,7 @@
 xdisasm
 =======
 
-xdisasm is a simple binary file disassembler based on libopcodes and bfd from binutils. It uses the libxdisasm library which currently supports x86, x86_64, arm, ppc and mips. The idea is to try and mimic the output given by the ndisasm program which unfortunately only supports x86/x86_64.
+xdisasm is a simple binary file disassembler based on libopcodes and bfd from binutils. It uses the [libxdisasm](http://github.com/acama/libxdisasm) library which currently supports x86, x86_64, arm, ppc and mips. The idea is to try and mimic the output given by the [ndisasm](http://www.nasm.us/doc/nasmdoca.html) program which unfortunately only supports x86/x86_64.
 
 Build Instructions:
 -------------------
