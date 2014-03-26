@@ -6,8 +6,13 @@ default: all
 
 all: makelib xdisasm
 
+withstatic: makelibwithstatic xdisasm
+
 makelib:
 	cd libxdisasm && $(MAKE)
+
+makelibwithstatic:
+	cd libxdisasm && $(MAKE) withstatic
 
 xdisasm: main.o
 	$(CC) $(CFLAGS) -o ${APP} main.o
