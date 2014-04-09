@@ -1,4 +1,5 @@
-/*  main.c -- Main file
+/*  
+    main.c -- Main file
     Copyright (C) 2014  Amat I. Cama
 
     This file is part of xdisasm.
