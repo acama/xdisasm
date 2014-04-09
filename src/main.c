@@ -19,9 +19,6 @@
  */
 
 
-//#include "libxdisasm/package.h"
-//#include <bfd.h>
-//#include <dis-asm.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -31,12 +28,15 @@
 #include "libxdisasm/include/xdisasm.h"
 
 #define VERSION "1.0"
+#define XNAME "xdisasm"
 
+// Print version
 void print_version(){
-    printf("%s \n", VERSION);
+    printf("%s %s \n", XNAME, VERSION);
     exit(0);
 }
 
+// Print usage
 void print_usage(){
     printf("Usage: xdisasm -m arch [-b bits] [-e bytes] [-l endian] [-a relocaddr] [-v] [-h] inputfile\n");
     printf("\t -b (16 | 32 | 64) sets the processor mode\n");
