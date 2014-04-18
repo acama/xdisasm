@@ -63,7 +63,7 @@ int main(int argc, char **argv){
     char * data = NULL;
     size_t datalen = 0;
     size_t hdrlen = 0;
-    unsigned int vma = 0;
+    unsigned long long vma = 0;
     char endianchar = 0;
 
     while((opt = getopt(argc, argv, "b:m:e:a:vhl:")) != -1){
@@ -112,7 +112,7 @@ int main(int argc, char **argv){
     infile = argv[optind];
 
     if(aval){
-        vma = strtol(aval, NULL, 0);
+        vma = strtoull(aval, NULL, 0);
         if(vma == LONG_MAX || vma == LONG_MIN || vma == 0){
             perror("strtol");
             exit(-1);

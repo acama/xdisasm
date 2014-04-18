@@ -1,6 +1,8 @@
 CC=gcc
 APP=../build/xdisasmbin
-CFLAGS= -Wall -Llibxdisasm/build/lib/ -lxdisasm
+CFLAGS= -Wall 
+LDFLAGS= -Llibxdisasm/build/lib/ -lxdisasm
+
 
 default: all
 
@@ -20,7 +22,7 @@ makelibwithstatic:
 	cp libxdisasm/build/lib/libxdisasm.so ../build/lib/libxdisasm.so
 
 xdisasm: main.o
-	$(CC) $(CFLAGS) -o ${APP} main.o
+	$(CC) $(CFLAGS) main.o -o ${APP} $(LDFLAGS)
 
 clean:
 	rm -rf *.o ${APP}
