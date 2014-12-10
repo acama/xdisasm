@@ -1,24 +1,15 @@
 CC=gcc
 APP=../build/xdisasmbin
 CFLAGS= -Wall 
-LDFLAGS= -Llibxdisasm/build/lib/ -lxdisasm
+LDFLAGS= -lopcodes -Llibxdisasm/build/lib/ -lxdisasm -lbfd -liberty -lz -ldl
 
 
 default: all
 
-all: getlib makelib xdisasm
-
-withstatic: getlib makelibwithstatic xdisasm
-
-getlib:
-	test -d libxdisasm || git clone https://github.com/acama/libxdisasm
+all: makelib xdisasm
 
 makelib:
 	cd libxdisasm && $(MAKE)
-	cp libxdisasm/build/lib/libxdisasm.so ../build/lib/libxdisasm.so
-
-makelibwithstatic:
-	cd libxdisasm && $(MAKE) withstatic 
 	cp libxdisasm/build/lib/libxdisasm.so ../build/lib/libxdisasm.so
 
 xdisasm: main.o
